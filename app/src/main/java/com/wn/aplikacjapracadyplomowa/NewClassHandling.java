@@ -88,7 +88,7 @@ public class NewClassHandling extends Thread {
         public void run() {
             while (true) {
                 try {
-                    Thread.sleep(500);
+                    Thread.sleep(100);
                     ByteArrayOutputStream result = new ByteArrayOutputStream();
                     byte[] buffer = new byte[256];
                     int length;
