@@ -14,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.IOException;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "WN_MainActivity";
@@ -306,8 +307,9 @@ public class MainActivity extends AppCompatActivity {
         messageSender.innerHandler.post(new Runnable() {
             @Override
             public void run() {
-                messageSender.send(sentMessage);
-                Log.d(TAG, "MESSAGE SENT");
+                String message = positionValueX + "/" + positionValueY + "/" + positionValueZ + "/" + orientationValueR + "/" + orientationValueP + "/" + orientationValueY;
+                messageSender.send(message);
+                Log.d(TAG, "MESSAGE SENT " + message);
             }
         });
     }
