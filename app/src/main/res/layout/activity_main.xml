@@ -36,6 +36,7 @@
         android:text="@string/movementButton"
         android:textColor="#1F3BCA"
         android:textSize="30sp"
+        android:onClick="sendMessage"
         app:layout_constraintBottom_toBottomOf="@+id/clearAllButtonID"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"

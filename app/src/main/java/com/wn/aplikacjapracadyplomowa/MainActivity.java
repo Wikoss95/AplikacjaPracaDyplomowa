@@ -301,7 +301,7 @@ public class MainActivity extends AppCompatActivity {
     // nowe zadanie przekazuje do handlera, ktory jest w nowej klasie pewne instrukcje, ten wrzuca
     // do loopera i pozniej wykonuje
     public void sendMessage(View view) {
-        final NewClassHandling.MessageSender messageSender = sendMovementOrder.new MessageSender();
+        final NewClassHandling.MessageSender messageSender = sendMovementOrder.myMessageSender;
 //        recieveReadings.handler.post(new Runnable() {
         messageSender.innerHandler.post(new Runnable() {
             @Override

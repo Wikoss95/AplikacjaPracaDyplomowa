@@ -1,4 +1,5 @@
 package com.wn.aplikacjapracadyplomowa;
+
 import android.os.Looper;
 
 import android.os.Handler;
@@ -21,17 +22,16 @@ public class NewClassHandling extends Thread {
     public Handler handler;
     public Socket mySocket = new Socket();
     private SocketAddress socketAddress = new InetSocketAddress("192.168.1.99", 9999);
+    public MessageSender myMessageSender;
 
     public void startConnection() {
         try {
-            mySocket.connect(socketAddress);
-            MessageSender myMessageSender = new MessageSender();
             myMessageSender.start();
+            mySocket.connect(socketAddress);
         } catch (IOException e) {
             Log.e(TAG, e.toString(), e);
         }
     }
-
 
     @Override
     public void run() {
@@ -39,6 +39,7 @@ public class NewClassHandling extends Thread {
         Looper.prepare();
         // Utworzenie nowego obiektu "handler"
         handler = new Handler();
+        myMessageSender = new MessageSender();
         // petla nieskonczona FOR
         Looper.loop();
         Log.d(TAG, "End of run() in external class");
@@ -46,7 +47,7 @@ public class NewClassHandling extends Thread {
 
 
     // INNER CLASS
-    public class MessageSender extends Thread {
+    class MessageSender extends Thread {
 
         Handler innerHandler;
         private PrintWriter printWriter;
