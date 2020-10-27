@@ -86,24 +86,25 @@ public class NewClassHandling extends Thread {
 
         @Override
         public void run() {
-            try {
-                ByteArrayOutputStream result = new ByteArrayOutputStream();
-                byte[] buffer = new byte[256];
-                int length;
-                while ((length = mySocket.getInputStream().read(buffer)) != -1) {
-                    result.write(buffer, 0, length);
+            while (true) {
+                try {
+                    Thread.sleep(500);
+                    ByteArrayOutputStream result = new ByteArrayOutputStream();
+                    byte[] buffer = new byte[256];
+                    int length;
+                    while ((length = mySocket.getInputStream().read(buffer)) != -1) {
+                        result.write(buffer, 0, length);
+                    }
+                    String message = result.toString("UTF-8");
+                    Log.d(TAG, "Message: " + message);
+                    String[] messageSplit = message.split("/");
+                    if (messageSplit.length == 6) {
+                        activity.setCurrentResponse(Float.parseFloat(messageSplit[0]), Float.parseFloat(messageSplit[1]), Float.parseFloat(messageSplit[2]), Float.parseFloat(messageSplit[3]), Float.parseFloat(messageSplit[4]), Float.parseFloat(messageSplit[5]));
+                    }
+                } catch (Exception e) {
+                    Log.e(TAG, e.toString(), e);
                 }
-                String message = result.toString("UTF-8");
-                Log.d(TAG, "Message: " + message);
-                String[] messageSplit = message.split("/");
-                if (messageSplit.length == 6) {
-                    activity.setCurrentResponse(Float.parseFloat(messageSplit[0]), Float.parseFloat(messageSplit[1]), Float.parseFloat(messageSplit[2]), Float.parseFloat(messageSplit[3]), Float.parseFloat(messageSplit[4]), Float.parseFloat(messageSplit[5]));
-                }
-            } catch (Exception e) {
-                Log.e(TAG, e.toString(), e);
             }
-
-            Log.d(TAG, "End of inner class job = sender reports having sent the message");
         }
     }
 
