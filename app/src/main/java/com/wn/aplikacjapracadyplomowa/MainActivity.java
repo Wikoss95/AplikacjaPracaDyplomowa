@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
 
     //tylko inicjalizacja
     NewClassHandling sendMovementOrder;
-//    NewClassHandling tasks;
+    //    NewClassHandling tasks;
     RadioButton isConnectedButton;
     RadioButton isBoundButton;
     RadioButton isClosedButton;
@@ -105,8 +105,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 //Log.d("SB", "Joint 1 progress");
-                internalValueX= (positionSeekBarX.getProgress()-90);
-                positionChangeIndicatorX.setText( internalValueX + "\u00B0");
+                internalValueX = (positionSeekBarX.getProgress() - 90);
+                positionChangeIndicatorX.setText(internalValueX + "\u00B0");
                 positionChangeIndicatorX.setTextSize(14);
                 positionChangeIndicatorX.setTextColor(Color.BLACK);
             }
@@ -131,8 +131,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 //Log.d("SB", "Joint 1 progress");
-                internalValueY= (positionSeekBarY.getProgress()-90);
-                positionChangeIndicatorY.setText( internalValueY + "\u00B0");
+                internalValueY = (positionSeekBarY.getProgress() - 90);
+                positionChangeIndicatorY.setText(internalValueY + "\u00B0");
                 positionChangeIndicatorY.setTextSize(14);
                 positionChangeIndicatorY.setTextColor(Color.BLACK);
             }
@@ -157,8 +157,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 //Log.d("SB", "Joint 1 progress");
-                internalValueZ= (positionSeekBarZ.getProgress()-90);
-                positionChangeIndicatorZ.setText( internalValueZ + "\u00B0");
+                internalValueZ = (positionSeekBarZ.getProgress() - 90);
+                positionChangeIndicatorZ.setText(internalValueZ + "\u00B0");
                 positionChangeIndicatorZ.setTextSize(14);
                 positionChangeIndicatorZ.setTextColor(Color.BLACK);
             }
@@ -183,8 +183,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 //Log.d("SB", "Joint 1 progress");
-                internalValueR= (orientationSeekBarR.getProgress()-90);
-                orientationChangeIndicatorR.setText( internalValueR + "\u00B0");
+                internalValueR = (orientationSeekBarR.getProgress() - 90);
+                orientationChangeIndicatorR.setText(internalValueR + "\u00B0");
                 orientationChangeIndicatorR.setTextSize(14);
                 orientationChangeIndicatorR.setTextColor(Color.BLACK);
             }
@@ -209,8 +209,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 //Log.d("SB", "Joint 1 progress");
-                internalValueP= (orientationSeekBarP.getProgress()-90);
-                orientationChangeIndicatorP.setText( internalValueP + "\u00B0");
+                internalValueP = (orientationSeekBarP.getProgress() - 90);
+                orientationChangeIndicatorP.setText(internalValueP + "\u00B0");
                 orientationChangeIndicatorP.setTextSize(14);
                 orientationChangeIndicatorP.setTextColor(Color.BLACK);
             }
@@ -235,8 +235,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 //Log.d("SB", "Joint 1 progress");
-                internalValueY= (orientationSeekBarY.getProgress()-90);
-                orientationChangeIndicatorY.setText( internalValueY + "\u00B0");
+                internalValueY = (orientationSeekBarY.getProgress() - 90);
+                orientationChangeIndicatorY.setText(internalValueY + "\u00B0");
                 orientationChangeIndicatorY.setTextSize(14);
                 orientationChangeIndicatorY.setTextColor(Color.BLACK);
             }
@@ -276,14 +276,24 @@ public class MainActivity extends AppCompatActivity {
     public void startConnection(View view) {
         //uruchamianie nowego watku
         try {
-            sendMovementOrder.bindSocket();
-            sendMovementOrder.startConnection();
-            if (sendMovementOrder.mySocket.isConnected())
-                Toast.makeText(MainActivity.this, "Połączono z urządzeniem!", Toast.LENGTH_SHORT).show();
-                connectButton.setBackgroundColor(Color.DKGRAY);
-        } catch (Exception e){
-            e.printStackTrace();
-            Log.d(TAG, "startConnectionButton EXCEPTION");
+            sendMovementOrder.handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    sendMovementOrder.startConnection();
+                    if (sendMovementOrder.mySocket.isConnected()) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(MainActivity.this, "Połączono z urządzeniem!", Toast.LENGTH_SHORT).show();
+                                connectButton.setBackgroundColor(Color.DKGRAY);
+                            }
+                        });
+                    }
+                }
+            });
+
+        } catch (Exception e) {
+            Log.e(TAG, e.toString(), e);
         }
     }
 
@@ -291,7 +301,7 @@ public class MainActivity extends AppCompatActivity {
     // nowe zadanie przekazuje do handlera, ktory jest w nowej klasie pewne instrukcje, ten wrzuca
     // do loopera i pozniej wykonuje
     public void sendMessage(View view) {
-        final NewClassHandling.MessageSender messageSender = sendMovementOrder.new MessageSender();
+        final NewClassHandling.MessageSender messageSender = sendMovementOrder.myMessageSender;
 //        recieveReadings.handler.post(new Runnable() {
         messageSender.innerHandler.post(new Runnable() {
             @Override
@@ -314,4 +324,4 @@ public class MainActivity extends AppCompatActivity {
 //            }
 //        });
 
-    }
+}
