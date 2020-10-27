@@ -39,7 +39,7 @@ public class NewClassHandling extends Thread {
         try {
             myMessageSender.start();
             mySocket.connect(socketAddress);
-            myMessageReader.start();
+//            myMessageReader.start();    // WLACZANIE CZYTANIA ;)
         } catch (IOException e) {
             Log.e(TAG, e.toString(), e);
         }
@@ -99,7 +99,8 @@ public class NewClassHandling extends Thread {
         public void run() {
             while (running) {
                 try {
-                    wait(100);
+                    sleep(100);
+                    Log.e("ROZPOCZECIE","Rozpoczecie");
                     ByteArrayOutputStream result = new ByteArrayOutputStream();
                     BufferedInputStream inputStreamReader = new BufferedInputStream(mySocket.getInputStream());
 
