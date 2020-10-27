@@ -1,0 +1,27 @@
+<resources>
+    <string name="app_name">AplikacjaPracaDyplomowa</string>
+    <string name="clearButtonText">WYCZYŚĆ</string>
+    <string name="connectButtonText">POŁĄCZ</string>
+    <string name="movementButton">RUCH</string>
+    <string name="activityTopText">W celu sterowania manipulatorem podaj wartości parametrów określających położenie oraz orientację końcówki roboczej:</string>
+    <string name="positionText">Docelowa pozycja chwytaka:</string>
+    <string name="orientationText">Docelowa orientacja chwytaka:</string>
+    <string name="OsX">Oś X:</string>
+    <string name="OsY">Oś Y:</string>
+    <string name="OsZ">Oś Z:</string>
+    <string name="KatR">Roll:</string>
+    <string name="KatP">Pitch:</string>
+    <string name="KatY">Yaw:</string>
+    <string name="setXText">0</string>
+    <string name="readXText">0</string>
+    <string name="setYText">0</string>
+    <string name="readYText">0</string>
+    <string name="setZText">0</string>
+    <string name="readZText">0</string>
+    <string name="setRollText">0°</string>
+    <string name="readRollText">0°</string>
+    <string name="setPitchText">0°</string>
+    <string name="readPitchText">0°</string>
+    <string name="setYawText">0°</string>
+    <string name="readYawText">0°</string>
+</resources>
