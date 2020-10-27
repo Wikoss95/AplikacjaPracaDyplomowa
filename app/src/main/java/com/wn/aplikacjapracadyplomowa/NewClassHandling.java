@@ -6,8 +6,10 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
+import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Inet4Address;
 import java.net.InetAddress;
@@ -15,6 +17,7 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketAddress;
 import java.net.UnknownHostException;
+import java.nio.charset.StandardCharsets;
 
 public class NewClassHandling extends Thread {
     private static final String TAG = "WN_NewClassHandling";
@@ -26,6 +29,7 @@ public class NewClassHandling extends Thread {
     public MessageSender myMessageSender;
     private MainActivity activity;
     private MessageReader myMessageReader;
+    private volatile boolean running = true;
 
     public NewClassHandling(MainActivity activity) {
         this.activity = activity;
@@ -54,16 +58,23 @@ public class NewClassHandling extends Thread {
         Log.d(TAG, "End of run() in external class");
     }
 
+    public void stopReading() {
+        running = false;
+        try {
+            mySocket.close();
+        } catch (IOException e) {
+            Log.e(TAG, e.toString(), e);
+        }
+    }
 
     // INNER CLASS
     class MessageSender extends Thread {
 
         Handler innerHandler;
-        private PrintWriter printWriter;
 
         public void send(String movement_order) {
             try {
-                printWriter = new PrintWriter(mySocket.getOutputStream(), true);
+                PrintWriter printWriter = new PrintWriter(mySocket.getOutputStream(), true);
                 printWriter.write(movement_order);
                 printWriter.close();
             } catch (IOException e) {
@@ -86,16 +97,19 @@ public class NewClassHandling extends Thread {
 
         @Override
         public void run() {
-            while (true) {
+            while (running) {
                 try {
-                    Thread.sleep(100);
+                    wait(100);
                     ByteArrayOutputStream result = new ByteArrayOutputStream();
-                    byte[] buffer = new byte[256];
+                    BufferedInputStream inputStreamReader = new BufferedInputStream(mySocket.getInputStream());
+
+                    byte[] buffer = new byte[32];
                     int length;
-                    while ((length = mySocket.getInputStream().read(buffer)) != -1) {
+                    while ((length = inputStreamReader.read(buffer)) != -1) {
                         result.write(buffer, 0, length);
+                        Log.v(TAG, "ReadByte: " + new String(buffer, StandardCharsets.UTF_8));
                     }
-                    String message = result.toString("UTF-8");
+                    String message = new String(result.toByteArray(), StandardCharsets.UTF_8);
                     Log.d(TAG, "Message: " + message);
                     String[] messageSplit = message.split("/");
                     if (messageSplit.length == 6) {
