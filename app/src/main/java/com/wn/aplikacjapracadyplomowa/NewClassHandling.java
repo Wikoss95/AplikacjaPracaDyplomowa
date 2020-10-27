@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Inet4Address;
@@ -23,11 +24,18 @@ public class NewClassHandling extends Thread {
     public Socket mySocket = new Socket();
     private SocketAddress socketAddress = new InetSocketAddress("192.168.1.99", 9999);
     public MessageSender myMessageSender;
+    private MainActivity activity;
+    private MessageReader myMessageReader;
+
+    public NewClassHandling(MainActivity activity) {
+        this.activity = activity;
+    }
 
     public void startConnection() {
         try {
             myMessageSender.start();
             mySocket.connect(socketAddress);
+            myMessageReader.start();
         } catch (IOException e) {
             Log.e(TAG, e.toString(), e);
         }
@@ -40,6 +48,7 @@ public class NewClassHandling extends Thread {
         // Utworzenie nowego obiektu "handler"
         handler = new Handler();
         myMessageSender = new MessageSender();
+        myMessageReader = new MessageReader();
         // petla nieskonczona FOR
         Looper.loop();
         Log.d(TAG, "End of run() in external class");
@@ -72,5 +81,30 @@ public class NewClassHandling extends Thread {
         }
     }
 
+
+    class MessageReader extends Thread {
+
+        @Override
+        public void run() {
+            try {
+                ByteArrayOutputStream result = new ByteArrayOutputStream();
+                byte[] buffer = new byte[256];
+                int length;
+                while ((length = mySocket.getInputStream().read(buffer)) != -1) {
+                    result.write(buffer, 0, length);
+                }
+                String message = result.toString("UTF-8");
+                Log.d(TAG, "Message: " + message);
+                String[] messageSplit = message.split("/");
+                if (messageSplit.length == 6) {
+                    activity.setCurrentResponse(Float.parseFloat(messageSplit[0]), Float.parseFloat(messageSplit[1]), Float.parseFloat(messageSplit[2]), Float.parseFloat(messageSplit[3]), Float.parseFloat(messageSplit[4]), Float.parseFloat(messageSplit[5]));
+                }
+            } catch (Exception e) {
+                Log.e(TAG, e.toString(), e);
+            }
+
+            Log.d(TAG, "End of inner class job = sender reports having sent the message");
+        }
+    }
 
 }

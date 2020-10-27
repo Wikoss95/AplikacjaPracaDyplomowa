@@ -262,7 +262,7 @@ public class MainActivity extends AppCompatActivity {
 //        readAngle1.setText( jointBasic1 + "\u00B0");
 //        readAngle1.setText( jointBasic2 + "\u00B0");
 
-        sendMovementOrder = new NewClassHandling();
+        sendMovementOrder = new NewClassHandling(this);
         sendMovementOrder.start();
 
     }
@@ -298,6 +298,37 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+
+    public void setCurrentResponse(final float positionValueX, final float positionValueY, final float positionValueZ, final float orientationValueR, final float orientationValueP, final float orientationValueY) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                positionCurrentIndicatorX.setText(positionValueX + "\u00B0");
+                positionCurrentIndicatorX.setTextSize(12);
+                positionCurrentIndicatorX.setTextColor(Color.DKGRAY);
+
+                positionCurrentIndicatorY.setText(positionValueY + "\u00B0");
+                positionCurrentIndicatorY.setTextSize(12);
+                positionCurrentIndicatorY.setTextColor(Color.DKGRAY);
+
+                positionCurrentIndicatorZ.setText(positionValueZ + "\u00B0");
+                positionCurrentIndicatorZ.setTextSize(12);
+                positionCurrentIndicatorZ.setTextColor(Color.DKGRAY);
+
+                orientationCurrentIndicatorR.setText(orientationValueR + "\u00B0");
+                orientationCurrentIndicatorR.setTextSize(12);
+                orientationCurrentIndicatorR.setTextColor(Color.DKGRAY);
+
+                orientationCurrentIndicatorP.setText(orientationValueP + "\u00B0");
+                orientationCurrentIndicatorP.setTextSize(12);
+                orientationCurrentIndicatorP.setTextColor(Color.DKGRAY);
+
+                orientationCurrentIndicatorY.setText(orientationValueY + "\u00B0");
+                orientationCurrentIndicatorY.setTextSize(12);
+                orientationCurrentIndicatorY.setTextColor(Color.DKGRAY);
+            }
+        });
+    }
 
     // nowe zadanie przekazuje do handlera, ktory jest w nowej klasie pewne instrukcje, ten wrzuca
     // do loopera i pozniej wykonuje
