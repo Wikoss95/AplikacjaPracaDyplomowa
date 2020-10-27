@@ -21,28 +21,14 @@ public class NewClassHandling extends Thread {
     public Handler handler;
     public Socket mySocket = new Socket();
     private SocketAddress socketAddress = new InetSocketAddress("192.168.1.99", 9999);
-    private SocketAddress innerSocketAddress = new InetSocketAddress(mySocket.getLocalAddress(), 9999);
-
-
-    public void bindSocket(){
-        try {
-            mySocket.bind(innerSocketAddress);
-        } catch (IOException e) {
-            e.printStackTrace();
-            Log.d(TAG, "bindSocket EXCEPTION");
-        }
-    }
 
     public void startConnection() {
         try {
-            mySocket.connect(innerSocketAddress);
+            mySocket.connect(socketAddress);
             MessageSender myMessageSender = new MessageSender();
             myMessageSender.start();
-            myMessageSender.run();
-
         } catch (IOException e) {
-            e.printStackTrace();
-            Log.d(TAG, "startConnection EXCEPTION");
+            Log.e(TAG, e.toString(), e);
         }
     }
 
@@ -71,8 +57,7 @@ public class NewClassHandling extends Thread {
                 printWriter.write(movement_order);
                 printWriter.close();
             } catch (IOException e) {
-                e.printStackTrace();
-                Log.d(TAG, "send'ing in MessageSender EXCEPTION");
+                Log.e(TAG, e.toString(), e);
             }
 
         }
